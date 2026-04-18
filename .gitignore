@@ -16,6 +16,3 @@ Test_gemma.py
 Test_Txt2Sql_Agent.py
 Test.py
 train_tf_idf.parquet
-
-#git config --global user.name "Jesus-Guzman-21"
-#git config --global user.email "j.daniel.guzman.21@gmail.com"
