@@ -1,0 +1,21 @@
+# Variables de entorno (Secretos)
+.env
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+*.duckdb
+
+# Entornos virtuales (si usas uno)
+nlp/
+rag/
+
+# Archivos que no se suben
+Reto_1_TF_IDF.ipynb
+Test_gemma.py
+Test_Txt2Sql_Agent.py
+Test.py
+train_tf_idf.parquet
+
+#git config --global user.name "Jesus-Guzman-21"
+#git config --global user.email "j.daniel.guzman.21@gmail.com"
