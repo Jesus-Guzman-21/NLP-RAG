@@ -2,14 +2,14 @@ import os
 import duckdb
 from openai import OpenAI
 from dotenv import load_dotenv
-from Test_Txt2Sql_Agent_ import SQL_RAG_Agent 
-from Test_DF_Agent import DataFrame_Agent 
+from agents.Test_Txt2Sql_Agent_ import SQL_RAG_Agent 
+from agents.Test_DF_Agent import DataFrame_Agent 
 
 def main():
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
-    db_path = "Reto_5_RAG_DB.duckdb"
-    json_path = "sql_dataset_bourbaki.json" 
+    db_path = "database/Reto_5_RAG_DB.duckdb"
+    json_path = "data/sql_dataset_bourbaki.json" 
 
     if not api_key:
         print("Error: Configura OPENAI_API_KEY en tu .env")
