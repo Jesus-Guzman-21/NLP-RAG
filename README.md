@@ -1,4 +1,4 @@
-# 🧠 SQL RAG Agent con DuckDB y OpenAI
+# SQL RAG Agent con DuckDB y OpenAI
 
 Sistema de **Text-to-SQL con RAG (Retrieval-Augmented Generation)** que permite hacer preguntas en lenguaje natural sobre una base de datos y obtener:
 
@@ -8,16 +8,16 @@ Sistema de **Text-to-SQL con RAG (Retrieval-Augmented Generation)** que permite 
 
 ---
 
-## 🚀 Características
+## Características
 
-* 🔎 Retrieval semántico con FAISS
-* 🧠 Generación SQL con OpenAI
-* 🗄️ Ejecución directa en DuckDB
-* 📊 Interpretación de resultados con DataFrame Agent
+*  Retrieval semántico con FAISS
+*  Generación SQL con OpenAI
+*  Ejecución directa en DuckDB
+*  Interpretación de resultados con DataFrame Agent
 
 ---
 
-## 📦 Instalación
+## Instalación
 
 Clona el repositorio:
 
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🔑 Configuración
+## Configuración
 
 Crea un archivo `.env`:
 
@@ -44,7 +44,7 @@ OPENAI_API_KEY=tu_api_key_aqui
 
 ---
 
-## ▶️ Uso
+## Uso
 
 Ejecuta el programa principal:
 
@@ -61,7 +61,7 @@ Enlista todos los productos con 0 existencias en el inventario.
 
 ---
 
-## 🔄 Flujo del sistema
+## Flujo del sistema
 
 1. Usuario hace una pregunta
 2. RAG recupera tablas relevantes (FAISS + embeddings)
@@ -71,7 +71,7 @@ Enlista todos los productos con 0 existencias en el inventario.
 
 ---
 
-## 📁 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 NLP-RAG/
@@ -93,7 +93,7 @@ NLP-RAG/
 
 ---
 
-## 🧠 Tecnologías usadas
+## Tecnologías usadas
 
 * FAISS (búsqueda vectorial)
 * DuckDB (base de datos analítica)
@@ -102,7 +102,7 @@ NLP-RAG/
 
 ---
 
-## ⚠️ Limitaciones
+## Limitaciones
 
 * No soporta queries de escritura (INSERT, DELETE, etc.)
 * Depende de la calidad del dataset JSON
@@ -110,7 +110,7 @@ NLP-RAG/
 
 ---
 
-## 🛠️ Futuras mejoras
+## Futuras mejoras
 
 * API con FastAPI
 * Validación avanzada de SQL antes de ejecución en DuckDB
@@ -118,7 +118,7 @@ NLP-RAG/
 
 ---
 
-## 👨‍💻 Autor
+## Autor
 
 Jesús Daniel Guzmán Valenzuela
 
