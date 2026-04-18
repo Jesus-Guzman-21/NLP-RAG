@@ -2,9 +2,9 @@
 
 Sistema de **Text-to-SQL con RAG (Retrieval-Augmented Generation)** que permite hacer preguntas en lenguaje natural sobre una base de datos y obtener:
 
-* ✅ Consulta SQL generada automáticamente
-* ✅ Ejecución sobre DuckDB
-* ✅ Respuesta final en lenguaje natural
+* Consulta SQL generada automáticamente
+* Ejecución sobre DuckDB
+* Respuesta final en lenguaje natural
 
 ---
 
