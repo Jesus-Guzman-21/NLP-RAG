@@ -9,10 +9,3 @@ __pycache__/
 # Entornos virtuales (si usas uno)
 nlp/
 rag/
-
-# Archivos que no se suben
-Reto_1_TF_IDF.ipynb
-Test_gemma.py
-Test_Txt2Sql_Agent.py
-Test.py
-train_tf_idf.parquet
