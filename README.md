@@ -1,32 +1,39 @@
-# SQL RAG Agent con DuckDB y OpenAI
+# SQL RAG Agent with DuckDB and OpenAI
 
-Sistema de **Text-to-SQL con RAG (Retrieval-Augmented Generation)** que permite hacer preguntas en lenguaje natural sobre una base de datos y obtener:
+Sistema de **Text-to-SQL basado en RAG (Retrieval-Augmented Generation)** que permite transformar consultas en lenguaje natural en consultas SQL ejecutables sobre una base de datos, retornando resultados interpretados en lenguaje natural.
 
-* Consulta SQL generada automáticamente
-* Ejecución sobre DuckDB
-* Respuesta final en lenguaje natural
+---
+
+## Descripción
+
+El sistema combina recuperación semántica, generación de código SQL y ejecución sobre un motor analítico. A partir de una pregunta del usuario:
+
+* Se identifican las tablas relevantes mediante embeddings y búsqueda vectorial
+* Se genera una consulta SQL alineada con el esquema disponible
+* Se ejecuta la consulta en DuckDB
+* Se produce una respuesta final en lenguaje natural basada en los resultados
 
 ---
 
 ## Características
 
-*  Retrieval semántico con FAISS
-*  Generación SQL con OpenAI
-*  Ejecución directa en DuckDB
-*  Interpretación de resultados con DataFrame Agent
+* Retrieval semántico mediante FAISS
+* Generación de consultas SQL con OpenAI
+* Ejecución directa sobre DuckDB
+* Interpretación de resultados mediante un agente basado en DataFrames
 
 ---
 
 ## Instalación
 
-Clona el repositorio:
+Clonar el repositorio:
 
 ```bash
 git clone https://github.com/Jesus-Guzman-21/NLP-RAG.git
 cd NLP-RAG
 ```
 
-Instala dependencias:
+Instalar dependencias:
 
 ```bash
 pip install -r requirements.txt
@@ -36,7 +43,7 @@ pip install -r requirements.txt
 
 ## Configuración
 
-Crea un archivo `.env`:
+Crear un archivo `.env` en la raíz del proyecto:
 
 ```env
 OPENAI_API_KEY=tu_api_key_aqui
@@ -46,16 +53,16 @@ OPENAI_API_KEY=tu_api_key_aqui
 
 ## Uso
 
-Ejecuta el programa principal:
+Ejecutar el programa principal:
 
 ```bash
 python Reto_5_RAG.py
 ```
 
-Luego escribe preguntas como:
+Ejemplos de consultas:
 
 ```
-¿Cuanto valen las ventas totales?
+¿Cuánto valen las ventas totales?
 Enlista todos los productos con 0 existencias en el inventario.
 ```
 
@@ -63,11 +70,11 @@ Enlista todos los productos con 0 existencias en el inventario.
 
 ## Flujo del sistema
 
-1. Usuario hace una pregunta
-2. RAG recupera tablas relevantes (FAISS + embeddings)
-3. Se genera una consulta SQL
-4. Se ejecuta en DuckDB
-5. Se devuelve una respuesta en lenguaje natural
+1. El usuario realiza una consulta en lenguaje natural
+2. El módulo RAG recupera las tablas más relevantes mediante embeddings
+3. Se genera una consulta SQL condicionada al esquema disponible
+4. La consulta se ejecuta en DuckDB
+5. Se genera una respuesta en lenguaje natural a partir de los resultados
 
 ---
 
@@ -93,28 +100,29 @@ NLP-RAG/
 
 ---
 
-## Tecnologías usadas
+## Tecnologías utilizadas
 
-* FAISS (búsqueda vectorial)
-* DuckDB (base de datos analítica)
-* OpenAI API (LLM + embeddings)
-* Pandas (manejo de datos)
+* FAISS — búsqueda vectorial
+* DuckDB — motor de base de datos analítica
+* OpenAI API — generación de texto y embeddings
+* Pandas — manipulación de datos tabulares
 
 ---
 
 ## Limitaciones
 
-* No soporta queries de escritura (INSERT, DELETE, etc.)
-* Depende de la calidad del dataset JSON
+* No se permiten operaciones de escritura (INSERT, UPDATE, DELETE, etc.)
+* La precisión depende de la calidad y cobertura del dataset JSON
 * Requiere conexión a la API de OpenAI
 
 ---
 
-## Futuras mejoras
+## Posibles mejoras
 
-* API con FastAPI
-* Validación avanzada de SQL antes de ejecución en DuckDB
-* Interfaz web
+* Exposición del sistema mediante una API (por ejemplo, con FastAPI)
+* Validación previa de consultas SQL antes de su ejecución
+* Persistencia del índice vectorial (FAISS)
+* Desarrollo de una interfaz de usuario
 
 ---
 
@@ -124,6 +132,6 @@ Jesús Daniel Guzmán Valenzuela
 
 ---
 
-## 📄 Licencia
+## Licencia
 
 MIT
