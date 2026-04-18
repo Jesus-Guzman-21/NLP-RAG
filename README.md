@@ -98,7 +98,7 @@ NLP-RAG/
 ├── Reto_5_RAG.py
 ├── requirements.txt
 └── README.md
-```
+
 ---
 
 ## Benchmark y propuesta
