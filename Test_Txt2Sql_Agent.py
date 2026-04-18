@@ -1,0 +1,177 @@
+import os
+import json
+import faiss
+import numpy as np
+from openai import OpenAI
+from langchain_core.documents import Document
+#from sentence_transformers import SentenceTransformer
+#from huggingface_hub import login
+
+class SQL_RAG_Agent:
+    # Note: Check why gemma doesn't work
+    #def __init__(self, model: str, client: OpenAI, hf_token: str, json_path: str, embedding_model_id: str = "google/embedding-gemma-300m"):
+    #    self.client = client
+    #    self.model = model
+    #    
+    #    # Login and Embedding Model
+    #    login(token=hf_token)
+    #    self.device = "cpu" # Adjust to 'cuda' if gpu is available 
+    #    self.embedding_model = SentenceTransformer(embedding_model_id).to(self.device)
+    #    
+    #    # Carga de datos y preparación del índice
+    #    self.documents = self._load_json_data(json_path)
+    #    self.index = self._build_faiss_index()
+
+    def _load_json_data(self, path: str):
+        """Preprocess .json file with Documents object from Langchain"""
+        with open(path, 'r') as file:
+            data = json.load(file)
+        
+        docs = []
+        for table_name, details in data.items():
+            doc = Document(
+                page_content=details["description"],
+                metadata={
+                    "table_name": table_name,
+                    "schema": details["schema"],
+                    "examples": details["examples"]
+                }
+            )
+            docs.append(doc)
+        return docs
+
+    def _build_faiss_index(self):
+        """Generate the embeddings with the table descriptions and create the FAISS index"""
+
+        table_descriptions = [doc.page_content for doc in self.documents]
+        table_embeddings = self.embedding_model.encode(table_descriptions, convert_to_numpy=True).astype('float32')
+        
+        dimension = table_embeddings.shape[1]
+        index = faiss.IndexFlatL2(dimension)
+        index.add(table_embeddings)
+        return index
+
+    def _retrieve_context(self, query: str, k_tables: int, n_examples: int):
+        """Global (table) and local (examples) search"""
+        query_vector = self.embedding_model.encode([query], convert_to_numpy=True).astype('float32')
+        
+        # Table search
+        _, indices = self.index.search(query_vector, k=k_tables)
+        
+        context_schemas = []
+        all_selected_examples = []
+
+        for idx in indices[0]:
+            doc = self.documents[idx]
+            meta = doc.metadata
+            context_schemas.append(f"Tabla: {meta['table_name']}\nSchema: {meta['schema']}")
+
+            # Similitud local para ejemplos
+            table_examples = meta["examples"]
+            ex_desc = [ex["description"] for ex in table_examples]
+            ex_vectors = self.embedding_model.encode(ex_desc, convert_to_numpy=True)
+            
+            scores = np.dot(ex_vectors, query_vector.T).flatten()
+            best_ex_indices = np.argsort(scores)[-n_examples:][::-1]
+            
+            for ex_idx in best_ex_indices:
+                all_selected_examples.append({
+                    "table": meta['table_name'],
+                    "description": table_examples[ex_idx]['description'],
+                    "sql": table_examples[ex_idx]['sql']
+                })
+        
+        return context_schemas, all_selected_examples
+
+    def _build_messages(self, query: str, schemas: list, examples: list):
+        schemas_str = "\n\n".join(schemas)
+        examples_str = ""
+        for i, ex in enumerate(examples, 1):
+            examples_str += f"\nEJEMPLO {i} (Tabla {ex['table']}):\n- Tarea: {ex['description']}\n- SQL: {ex['sql']}\n"
+
+        system_prompt = (
+            "Eres un experto en SQL corporativo. Genera consultas SQL válidas.\n"
+            "Reglas:\n"
+            "- Si requiere JOINs, usa los campos relacionales adecuados.\n"
+            "- Usa EXCLUSIVAMENTE columnas y tablas de los esquemas proporcionados.\n"
+            "- PROHIBIDO: DROP, DELETE, UPDATE, INSERT, TRUNCATE, ALTER, etc.\n"
+            "- Salida: UNICAMENTE el código SQL plano, sin explicaciones ni Markdown."
+        )
+
+        user_content = f"ESQUEMAS:\n{schemas_str}\n\nEJEMPLOS:\n{examples_str}\n\nPREGUNTA: {query}\nSQL:"
+        
+        return [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content}
+        ]
+
+    def run(self, query: str, k_tables: int = 3, n_examples_per_table: int = 2, temperature: int = 0, timeout: int = 60) -> str:
+        """Execute SQLRAG Agent"""
+        try:
+            # 1. Retrieval
+            schemas, examples = self._retrieve_context(query, k_tables, n_examples_per_table)
+            
+            # 2. Generation
+            messages = self._build_messages(query, schemas, examples)
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=temperature,
+                timeout=timeout
+            )
+            
+            # 3. Cleaning
+            raw_sql = response.choices[0].message.content.strip()
+            return raw_sql.replace("```sql", "").replace("```", "").strip()
+            # Note: Add a condition to check if the response contains valid tables
+            
+        except Exception as e:
+            return f"Error en SQL Agent: {str(e)}"
+        
+# ... (Todo el código de tu clase SQLRAGAgent arriba) ...
+
+if __name__ == "__main__":
+    import os
+    from dotenv import load_dotenv
+
+    # 1. Cargar credenciales
+    load_dotenv()
+    
+    # 2. Configuración de prueba
+    # Asegúrate de que estos nombres coincidan con tus archivos reales
+    OPENAI_KEY = os.getenv("OPENAI_API_KEY")
+    #HF_TOKEN = os.getenv("HF_TOKEN")
+    PATH_JSON = "tu_archivo_esquema.json" # <--- Cambia esto por tu ruta real
+
+    if not OPENAI_KEY : #or not HF_TOKEN
+        print("❌ Error: Faltan las llaves en el archivo .env")
+    else:
+        print("🚀 Iniciando prueba del Agente SQL RAG...")
+        
+        # 3. Inicializar el agente
+        # Nota: La primera vez descargará el modelo de Gemma, ten paciencia.
+        client = OpenAI(api_key=OPENAI_KEY)
+
+        agente = SQL_RAG_Agent(
+            model="gpt-4o-mini",
+            client=client,
+            json_path = 'sql_dataset_bourbaki.json'
+        )
+
+
+        # 4. Ejecutar una prueba
+        pregunta_test = "Muestra los nombres de productos y sus categorías"
+        
+        print(f"\nPregunta de prueba: {pregunta_test}")
+        print("-" * 30)
+        
+        # Aquí puedes jugar con los parámetros k_tables y n_examples_per_table
+        resultado = agente.run(
+            query=pregunta_test, 
+            k_tables=3, 
+            n_examples_per_table=2
+        )
+
+        print("\nResultado SQL Generado:")
+        print(resultado)
+        print("-" * 30)
