@@ -119,7 +119,7 @@ NLP-RAG/
 
 ## Posibles mejoras
 
-* Exposición del sistema mediante una API (por ejemplo, con FastAPI)
+* Utilizar parámetros como overlapping y chunks para evitar saturar la ventana de contexto
 * Validación previa de consultas SQL antes de su ejecución
 * Persistencia del índice vectorial (FAISS)
 * Desarrollo de una interfaz de usuario
