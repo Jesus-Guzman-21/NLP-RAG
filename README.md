@@ -78,9 +78,7 @@ Enlista todos los productos con 0 existencias en el inventario.
 
 ---
 
-## Estructura del proyecto
-
-```
+Estructura del proyecto
 NLP-RAG/
 │
 ├── agents/
@@ -93,12 +91,28 @@ NLP-RAG/
 ├── database/
 │   └── Reto_5_RAG_DB.duckdb
 │
+├── docs/
+│   ├── benchmark_modelo_clasico.pdf
+│   └── propuesta_proyecto.pdf
+│
 ├── Reto_5_RAG.py
 ├── requirements.txt
 └── README.md
 ```
-
 ---
+
+## Benchmark y propuesta
+
+En la carpeta `docs/` se incluye material complementario que documenta el análisis teórico del proyecto:
+
+* **Benchmark alternativo con modelos clásicos de Machine Learning**
+  Se propone un enfoque basado en clasificación de intenciones utilizando modelos como árboles de decisión o Random Forest, el cual actúa como línea base frente al sistema RAG.
+
+* **Presentación de propuesta de aplicación**
+  Se incluye una propuesta de aplicación práctica en el dominio de análisis de creativos y automatización con agentes de IA, donde se describe la problemática, los datos y un enfoque de modelado híbrido (ML clásico + LLMs).
+
+Este material tiene como objetivo complementar la implementación con una perspectiva comparativa y aplicada.
+
 
 ## Tecnologías utilizadas
 
