@@ -76,9 +76,7 @@ Enlista todos los productos con 0 existencias en el inventario.
 4. La consulta se ejecuta en DuckDB
 5. Se genera una respuesta en lenguaje natural a partir de los resultados
 
----
-
-Estructura del proyecto
+```
 NLP-RAG/
 │
 ├── agents/
@@ -98,7 +96,7 @@ NLP-RAG/
 ├── Reto_5_RAG.py
 ├── requirements.txt
 └── README.md
-
+```
 ---
 
 ## Benchmark y propuesta
